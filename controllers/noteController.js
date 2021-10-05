@@ -11,7 +11,14 @@ exports.note_list = (req, res) => {
 };
 
 exports.note_detail = (req, res) => {
-  res.send('NOT IMPLEMENTED: Note detail: ' + req.params.id);
+  Note.findById(req.params.id).exec((err, content) => {
+    if (err) {
+      return next(err);
+    }
+    res.json({
+      note: content,
+    });
+  });
 };
 
 exports.note_create_get = (req, res) => {

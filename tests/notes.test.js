@@ -19,6 +19,7 @@ beforeAll(() => {
   initializeDatabase();
 });
 
+beforeEach(async () => {
   await request(app)
     .post('/create')
     .type('form')

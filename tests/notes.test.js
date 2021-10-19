@@ -86,3 +86,23 @@ test('POST note works', (done) => {
       return done();
     });
 });
+
+test('DELETE note works', (done) => {
+  let id;
+  request(app)
+    .get('/')
+    .expect('Content-Type', /json/)
+    .expect((res) => {
+      id = res.body[0]._id;
+    })
+    .end((err) => {
+      if (err) return done(err);
+      request(app)
+        .delete('/' + id)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          return done();
+        });
+    });
+});

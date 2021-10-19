@@ -46,3 +46,17 @@ test('notes route works', (done) => {
       done();
     });
 });
+
+test('POST notes works', (done) => {
+  request(app)
+    .post('/create')
+    .type('form')
+    .send({ title: 'title2', body: 'body2' })
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end((err, res) => {
+      if (err) return done(err);
+      return done();
+    });
+});

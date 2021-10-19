@@ -31,7 +31,7 @@ afterEach(() => {
   clearDatabase();
 });
 
-test('notes route works', (done) => {
+test('GET note list works', (done) => {
   request(app)
     .get('/')
     .expect('Content-Type', /json/)
@@ -73,7 +73,7 @@ test('GET note works', (done) => {
     });
 });
 
-test('POST notes works', (done) => {
+test('POST note works', (done) => {
   request(app)
     .post('/create')
     .type('form')

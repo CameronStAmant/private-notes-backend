@@ -1,15 +1,14 @@
 const initializeMongoServer = require('../mongoConfigTesting');
-initializeMongoServer();
-
 const noteRouter = require('../routes/note');
-
 const request = require('supertest');
 const express = require('express');
-
 const app = express();
 
-app.use(express.urlencoded({ extended: false }));
-app.use('/', noteRouter);
+const initializeDatabase = () => {
+  initializeMongoServer();
+  app.use(express.urlencoded({ extended: false }));
+  app.use('/', noteRouter);
+};
 
 beforeAll(async () => {
   await request(app)

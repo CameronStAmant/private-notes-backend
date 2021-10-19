@@ -21,10 +21,6 @@ exports.note_detail = (req, res) => {
   });
 };
 
-exports.note_create_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Note create GET');
-};
-
 exports.note_create_post = [
   body('title').trim().isLength({ min: 1 }).escape(),
   body('body').trim().isLength({ min: 1 }),
@@ -54,16 +50,8 @@ exports.note_create_post = [
   },
 ];
 
-exports.note_delete_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Note delete GET');
-};
-
 exports.note_delete_post = (req, res) => {
   res.send('NOT IMPLEMENTED: Note delete POST');
-};
-
-exports.note_update_get = (req, res) => {
-  res.send('NOT IMPLEMENTED: Note update GET');
 };
 
 exports.note_update_post = (req, res) => {

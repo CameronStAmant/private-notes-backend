@@ -10,7 +10,10 @@ const initializeDatabase = () => {
   app.use('/', noteRouter);
 };
 
-beforeAll(async () => {
+beforeAll(() => {
+  initializeDatabase();
+});
+
   await request(app)
     .post('/create')
     .type('form')

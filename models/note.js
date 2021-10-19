@@ -6,4 +6,8 @@ const NoteSchema = new Schema({
   body: String,
 });
 
+NoteSchema.virtual('url').get(function () {
+  return '/notebook/' + this._id;
+});
+
 module.exports = mongoose.model('Note', NoteSchema);

@@ -47,6 +47,32 @@ test('notes route works', (done) => {
     });
 });
 
+test('GET note works', (done) => {
+  let id;
+  request(app)
+    .get('/')
+    .expect('Content-Type', /json/)
+    .expect((res) => {
+      id = res.body[0]._id;
+    })
+    .end((err) => {
+      if (err) return done(err);
+      request(app)
+        .get('/' + id)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err);
+          expect(res.body.note).toEqual(
+            expect.objectContaining({
+              title: 'title1',
+              body: 'body1',
+            })
+          );
+          done();
+        });
+    });
+});
+
 test('POST notes works', (done) => {
   request(app)
     .post('/create')

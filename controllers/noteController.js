@@ -57,13 +57,24 @@ exports.note_delete_post = (req, res) => {
   });
 };
 
-exports.note_update_post = (req, res) => {
-  Note.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
-    (err, content) => {
-      if (err) return next(err);
-      res.json({
-        note: content,
-      });
+exports.note_update_post = [
+  body('title').trim().isLength({ min: 1 }).escape(),
+  body('body').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log(errors);
+      return res.sendStatus(400);
+    } else {
+      Note.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
+        (err, content) => {
+          if (err) return next(err);
+          res.json({
+            note: content,
+          });
+        }
+      );
     }
-  );
-};
+  },
+];

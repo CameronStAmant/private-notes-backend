@@ -137,3 +137,33 @@ test('UPDATE note works', (done) => {
         });
     });
 });
+
+test('UPDATE note fails due to failed validation', (done) => {
+  let id;
+  request(app)
+    .get('/')
+    .expect('Content-Type', /json/)
+    .expect((res) => {
+      id = res.body[0]._id;
+    })
+    .end((err) => {
+      if (err) return done(err);
+      request(app)
+        .get('/' + id)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err);
+          request(app)
+            .put('/' + id)
+            .type('form')
+            .send({ title: '', body: 'body3' })
+            .set('Accept', 'application/json')
+            .expect(400)
+            .end((err, res) => {
+              if (err) return done(err);
+              console.log(res.body);
+              return done();
+            });
+        });
+    });
+});

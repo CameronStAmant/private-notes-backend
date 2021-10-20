@@ -106,3 +106,34 @@ test('DELETE note works', (done) => {
         });
     });
 });
+
+test('UPDATE note works', (done) => {
+  let id;
+  request(app)
+    .get('/')
+    .expect('Content-Type', /json/)
+    .expect((res) => {
+      id = res.body[0]._id;
+    })
+    .end((err) => {
+      if (err) return done(err);
+      request(app)
+        .get('/' + id)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err);
+          request(app)
+            .put('/' + id)
+            .type('form')
+            .send({ title: 'title3', body: 'body3' })
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end((err, res) => {
+              if (err) return done(err);
+              console.log(res.body);
+              return done();
+            });
+        });
+    });
+});

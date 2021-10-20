@@ -31,7 +31,7 @@ afterEach(() => {
   clearDatabase();
 });
 
-test('GET note list works', (done) => {
+test('GET note list', (done) => {
   request(app)
     .get('/')
     .expect('Content-Type', /json/)
@@ -47,7 +47,7 @@ test('GET note list works', (done) => {
     });
 });
 
-test('GET note works', (done) => {
+test('GET note details', (done) => {
   let id;
   request(app)
     .get('/')
@@ -73,7 +73,7 @@ test('GET note works', (done) => {
     });
 });
 
-test('POST note works', (done) => {
+test('POST note', (done) => {
   request(app)
     .post('/create')
     .type('form')
@@ -87,7 +87,7 @@ test('POST note works', (done) => {
     });
 });
 
-test('DELETE note works', (done) => {
+test('DELETE note', (done) => {
   let id;
   request(app)
     .get('/')
@@ -107,7 +107,7 @@ test('DELETE note works', (done) => {
     });
 });
 
-test('UPDATE note works', (done) => {
+test('UPDATE note', (done) => {
   let id;
   request(app)
     .get('/')
@@ -138,7 +138,7 @@ test('UPDATE note works', (done) => {
     });
 });
 
-test('UPDATE note fails due to failed validation', (done) => {
+test('UPDATE note fails on failed validation', (done) => {
   let id;
   request(app)
     .get('/')

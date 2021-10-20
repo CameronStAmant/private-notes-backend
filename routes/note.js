@@ -9,7 +9,7 @@ router.post('/create', note_controller.note_create_post);
 
 router.delete('/:id', note_controller.note_delete_post);
 
-router.put('/:id/update', note_controller.note_update_post);
+router.put('/:id', note_controller.note_update_post);
 
 router.get('/:id', note_controller.note_detail);
 

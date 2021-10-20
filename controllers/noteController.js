@@ -58,5 +58,12 @@ exports.note_delete_post = (req, res) => {
 };
 
 exports.note_update_post = (req, res) => {
-  res.send('NOT IMPLEMENTED: Note update POST');
+  Note.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
+    (err, content) => {
+      if (err) return next(err);
+      res.json({
+        note: content,
+      });
+    }
+  );
 };

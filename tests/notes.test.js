@@ -25,6 +25,11 @@ beforeEach(async () => {
     .type('form')
     .send({ title: 'title1', body: 'body1' })
     .set('Accept', 'application/json');
+  await request(app)
+    .post('/create')
+    .type('form')
+    .send({ title: 'title2', body: 'body2' })
+    .set('Accept', 'application/json');
 });
 
 afterEach(() => {
@@ -77,7 +82,7 @@ test('POST note', (done) => {
   request(app)
     .post('/create')
     .type('form')
-    .send({ title: 'title2', body: 'body2' })
+    .send({ title: 'title3', body: 'body3' })
     .set('Accept', 'application/json')
     .expect('Content-Type', /json/)
     .expect(200)
@@ -102,6 +107,32 @@ test('DELETE note', (done) => {
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
+          return done();
+        });
+    });
+});
+
+test('DELETE many notes', (done) => {
+  let ids = [];
+  request(app)
+    .get('/')
+    .expect('Content-Type', /json/)
+    .expect((res) => {
+      ids.push(res.body[0]._id);
+      ids.push(res.body[1]._id);
+    })
+    .end((err) => {
+      if (err) return done(err);
+      request(app)
+        .delete('/' + 'delete-many-notes')
+        .type('form')
+        .send({ ids })
+        .set('Accept', 'application/json')
+        // .expect('Content-Type', /json/)
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          console.log(`ids: ${ids}`);
           return done();
         });
     });

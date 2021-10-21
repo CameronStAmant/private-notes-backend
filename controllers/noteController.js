@@ -57,12 +57,10 @@ exports.note_delete_post = (req, res) => {
   });
 };
 
-exports.note_delete_many_notes = (req, res) => {
-  for (const [key, value] of Object.entries(req.body)) {
-    Note.findByIdAndDelete(value).exec((err) => {
-      if (err) return next(err);
-    });
-  }
+exports.note_delete_many_notes = (req, res, next) => {
+  Note.deleteMany({ _id: { $in: req.body.ids } }).exec((err) => {
+    if (err) return next(err);
+  });
   res.sendStatus(200);
 };
 

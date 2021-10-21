@@ -3,6 +3,7 @@ const noteRouter = require('../routes/note');
 const request = require('supertest');
 const express = require('express');
 const app = express();
+app.use(express.json());
 const Note = require('../models/note');
 
 const initializeDatabase = () => {
@@ -29,6 +30,11 @@ beforeEach(async () => {
     .post('/create')
     .type('form')
     .send({ title: 'title2', body: 'body2' })
+    .set('Accept', 'application/json');
+  await request(app)
+    .post('/create')
+    .type('form')
+    .send({ title: 'title245', body: 'body245' })
     .set('Accept', 'application/json');
 });
 
@@ -113,27 +119,36 @@ test('DELETE note', (done) => {
 });
 
 test('DELETE many notes', (done) => {
-  let ids = [];
+  let idArr = [];
   request(app)
     .get('/')
     .expect('Content-Type', /json/)
     .expect((res) => {
-      ids.push(res.body[0]._id);
-      ids.push(res.body[1]._id);
+      idArr.push(res.body[0]._id);
+      idArr.push(res.body[1]._id);
     })
-    .end((err) => {
+    .end((err, res) => {
       if (err) return done(err);
       request(app)
-        .delete('/' + 'delete-many-notes')
-        .type('form')
-        .send({ ids })
-        .set('Accept', 'application/json')
-        // .expect('Content-Type', /json/)
+        .delete('/delete-many-notes')
+        .set('Content-Type', 'application/json')
+        .send({ ids: idArr })
         .expect(200)
         .end((err, res) => {
           if (err) return done(err);
-          console.log(`ids: ${ids}`);
-          return done();
+          request(app)
+            .get('/')
+            .expect('Content-Type', /json/)
+            .end((err, res) => {
+              if (err) return done(err);
+              expect(res.body[0]).toEqual(
+                expect.objectContaining({
+                  title: 'title245',
+                  body: 'body245',
+                })
+              );
+              done();
+            });
         });
     });
 });

@@ -57,6 +57,15 @@ exports.note_delete_post = (req, res) => {
   });
 };
 
+exports.note_delete_many_notes = (req, res) => {
+  for (const [key, value] of Object.entries(req.body)) {
+    Note.findByIdAndDelete(value).exec((err) => {
+      if (err) return next(err);
+    });
+  }
+  res.sendStatus(200);
+};
+
 exports.note_update_post = [
   body('title').trim().isLength({ min: 1 }).escape(),
   body('body').trim().isLength({ min: 1 }).escape(),
@@ -64,7 +73,6 @@ exports.note_update_post = [
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log(errors);
       return res.sendStatus(400);
     } else {
       Note.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(

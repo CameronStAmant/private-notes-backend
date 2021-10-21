@@ -7,6 +7,8 @@ router.get('/', note_controller.note_list);
 
 router.post('/create', note_controller.note_create_post);
 
+router.delete('/delete-many-notes', note_controller.note_delete_many_notes);
+
 router.delete('/:id', note_controller.note_delete_post);
 
 router.put('/:id', note_controller.note_update_post);

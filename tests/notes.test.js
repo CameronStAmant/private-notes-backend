@@ -131,7 +131,6 @@ test('UPDATE note', (done) => {
             .expect(200)
             .end((err, res) => {
               if (err) return done(err);
-              console.log(res.body);
               return done();
             });
         });
@@ -161,7 +160,6 @@ test('UPDATE note fails on failed validation', (done) => {
             .expect(400)
             .end((err, res) => {
               if (err) return done(err);
-              console.log(res.body);
               return done();
             });
         });

@@ -9,7 +9,7 @@ const Folder = require('../models/folder');
 const initializeDatabase = () => {
   initializeMongoServer();
   app.use(express.urlencoded({ extended: false }));
-  app.use('/notebook/folders', folderRouter);
+  app.use('/', folderRouter);
 };
 
 const clearDatabase = async () => {
@@ -26,7 +26,7 @@ beforeEach(async () => {
   };
 
   await request(app)
-    .post('/notebook/folders')
+    .post('/')
     .set('Content-Type', 'application/json')
     .send(folder1);
 });
@@ -37,7 +37,7 @@ afterEach(() => {
 
 test('GET_folders', (done) => {
   request(app)
-    .get('/notebook/folders')
+    .get('/')
     .expect('Content-Type', /json/)
     .end((err, res) => {
       if (err) return done(err);

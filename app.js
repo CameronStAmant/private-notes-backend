@@ -6,6 +6,7 @@ var logger = require('morgan');
 require('dotenv').config();
 require('./mongoConfig');
 const noteRouter = require('./routes/note');
+const folderRouter = require('./routes/folder');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -21,5 +22,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/notebook', noteRouter);
+app.use('/notebook/folders', folderRouter);
 
 module.exports = app;

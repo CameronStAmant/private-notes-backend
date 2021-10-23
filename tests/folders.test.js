@@ -25,10 +25,19 @@ beforeEach(async () => {
     name: 'Test1',
   };
 
+  const folder2 = {
+    name: 'Test2',
+  };
+
   await request(app)
     .post('/')
     .set('Content-Type', 'application/json')
     .send(folder1);
+
+  await request(app)
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send(folder2);
 });
 
 afterEach(() => {
@@ -50,7 +59,7 @@ test('GET_folders', (done) => {
     });
 });
 
-test('POST_folders', (done) => {
+test('POST_folder', (done) => {
   const folder567 = {
     name: 'folder567',
   };
@@ -65,9 +74,28 @@ test('POST_folders', (done) => {
         .get('/')
         .end((err, res) => {
           if (err) return done(err);
-          console.log(res.body);
-          expect(res.body.length).toEqual(2);
+          expect(res.body.length).toEqual(3);
           done();
+        });
+    });
+});
+
+test('DELETE_folder', (done) => {
+  request(app)
+    .get('/')
+    .end((err, res) => {
+      if (err) return done(err);
+      request(app)
+        .delete('/' + res.body[0]._id)
+        .end((err, res) => {
+          if (err) return done(err);
+          request(app)
+            .get('/')
+            .end((err, res) => {
+              if (err) return done(err);
+              expect(res.body.length).toEqual(1);
+              done();
+            });
         });
     });
 });

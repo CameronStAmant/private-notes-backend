@@ -31,8 +31,30 @@ exports.POST_folder = [
 ];
 
 exports.DELETE_folder = (req, res, next) => {
-  Folder.findByIdAndDelete(req.params.id).exec((err, result) => {
+  Folder.findByIdAndDelete(req.params.id).exec((err) => {
     if (err) return next(err);
     res.sendStatus(200);
   });
 };
+
+exports.PUT_folder = [
+  body('name').trim().isLength({ min: 1 }).escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.json({
+        name: req.body.name,
+      });
+    } else {
+      Folder.findByIdAndUpdate(req.params.id, req.body, { new: true }).exec(
+        (err, content) => {
+          if (err) return next(err);
+          res.json({
+            folder: content,
+          });
+        }
+      );
+    }
+  },
+];

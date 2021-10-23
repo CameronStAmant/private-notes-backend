@@ -38,7 +38,7 @@ afterEach(() => {
 test('GET_folders', (done) => {
   request(app)
     .get('/')
-    .expect('Content-Type', /json/)
+    .set('Accept', 'application/json')
     .end((err, res) => {
       if (err) return done(err);
       expect(res.body[0]).toEqual(
@@ -47,5 +47,27 @@ test('GET_folders', (done) => {
         })
       );
       done();
+    });
+});
+
+test('POST_folders', (done) => {
+  const folder567 = {
+    name: 'folder567',
+  };
+
+  request(app)
+    .post('/')
+    .set('Content-Type', 'application/json')
+    .send(folder567)
+    .end((err, res) => {
+      if (err) return done(err);
+      request(app)
+        .get('/')
+        .end((err, res) => {
+          if (err) return done(err);
+          console.log(res.body);
+          expect(res.body.length).toEqual(2);
+          done();
+        });
     });
 });

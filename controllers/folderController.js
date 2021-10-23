@@ -29,3 +29,10 @@ exports.POST_folder = [
     }
   },
 ];
+
+exports.DELETE_folder = (req, res, next) => {
+  Folder.findByIdAndDelete(req.params.id).exec((err, result) => {
+    if (err) return next(err);
+    res.sendStatus(200);
+  });
+};

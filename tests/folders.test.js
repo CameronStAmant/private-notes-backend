@@ -99,3 +99,29 @@ test('DELETE_folder', (done) => {
         });
     });
 });
+
+test('PUT_folder', (done) => {
+  const folder4579 = {
+    name: 'Update Test1',
+  };
+
+  request(app)
+    .get('/')
+    .end((err, res) => {
+      if (err) return done(err);
+      request(app)
+        .put('/' + res.body[0]._id)
+        .send(folder4579)
+        .end((err, res) => {
+          if (err) return done(err);
+          // console.log(res.body);
+          request(app)
+            .get('/')
+            .end((err, res) => {
+              if (err) return done(err);
+              expect(res.body[0].name).toEqual('Update Test1');
+              done();
+            });
+        });
+    });
+});

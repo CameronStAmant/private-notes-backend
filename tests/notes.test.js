@@ -68,21 +68,18 @@ afterEach(() => {
   clearDatabase();
 });
 
-test('GET note list', (done) => {
-  request(app)
+test('GET note list', async () => {
+  const response = await request(app)
     .get('/note')
-    .expect('Content-Type', /json/)
-    .end((err, res) => {
-      if (err) return done(err);
-      expect(res.body[0]).toEqual(
-        expect.objectContaining({
-          title: 'title1',
-          body: 'body1',
-          folder: expect.any(String),
-        })
-      );
-      done();
-    });
+    .expect('Content-Type', /json/);
+
+  expect(response.body[0]).toEqual(
+    expect.objectContaining({
+      title: 'title1',
+      body: 'body1',
+      folder: expect.any(String),
+    })
+  );
 });
 
 test('GET note details', async () => {

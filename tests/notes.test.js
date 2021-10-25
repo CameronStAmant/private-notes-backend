@@ -49,17 +49,17 @@ beforeEach(async () => {
   fol2 = res.body[1]._id;
   await request(app)
     .post('/note/create')
-    .type('form')
+    .set('Content-Type', 'application/json')
     .send({ title: 'title1', body: 'body1', folder: fol1 })
     .set('Accept', 'application/json');
   await request(app)
     .post('/note/create')
-    .type('form')
+    .set('Content-Type', 'application/json')
     .send({ title: 'title2', body: 'body2', folder: fol2 })
     .set('Accept', 'application/json');
   await request(app)
     .post('/note/create')
-    .type('form')
+    .set('Content-Type', 'application/json')
     .send({ title: 'title245', body: 'body245', folder: fol1 })
     .set('Accept', 'application/json');
 });

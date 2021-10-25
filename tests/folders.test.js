@@ -9,7 +9,7 @@ const Folder = require('../models/folder');
 const initializeDatabase = () => {
   initializeMongoServer();
   app.use(express.urlencoded({ extended: false }));
-  app.use('/', folderRouter);
+  app.use('/folder', folderRouter);
 };
 
 const clearDatabase = async () => {
@@ -30,12 +30,12 @@ beforeEach(async () => {
   };
 
   await request(app)
-    .post('/')
+    .post('/folder')
     .set('Content-Type', 'application/json')
     .send(folder1);
 
   await request(app)
-    .post('/')
+    .post('/folder')
     .set('Content-Type', 'application/json')
     .send(folder2);
 });
@@ -44,84 +44,56 @@ afterEach(() => {
   clearDatabase();
 });
 
-test('GET_folders', (done) => {
-  request(app)
-    .get('/')
-    .set('Accept', 'application/json')
-    .end((err, res) => {
-      if (err) return done(err);
-      expect(res.body[0]).toEqual(
-        expect.objectContaining({
-          name: 'Test1',
-        })
-      );
-      done();
-    });
+test('GET_folders', async () => {
+  const response = await request(app)
+    .get('/folder')
+    .set('Accept', 'application/json');
+
+  expect(response.body[0]).toEqual(
+    expect.objectContaining({
+      name: 'Test1',
+    })
+  );
 });
 
-test('POST_folder', (done) => {
+test('POST_folder', async () => {
   const folder567 = {
     name: 'folder567',
   };
 
-  request(app)
-    .post('/')
+  await request(app)
+    .post('/folder')
     .set('Content-Type', 'application/json')
-    .send(folder567)
-    .end((err, res) => {
-      if (err) return done(err);
-      request(app)
-        .get('/')
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.body.length).toEqual(3);
-          done();
-        });
-    });
+    .send(folder567);
+
+  const response = await request(app).get('/folder');
+
+  expect(response.body.length).toEqual(3);
 });
 
-test('DELETE_folder', (done) => {
-  request(app)
-    .get('/')
-    .end((err, res) => {
-      if (err) return done(err);
-      request(app)
-        .delete('/' + res.body[0]._id)
-        .end((err, res) => {
-          if (err) return done(err);
-          request(app)
-            .get('/')
-            .end((err, res) => {
-              if (err) return done(err);
-              expect(res.body.length).toEqual(1);
-              done();
-            });
-        });
-    });
+test('DELETE_folder', async () => {
+  const response = await request(app).get('/folder');
+
+  const id = response.body[0]._id;
+
+  await request(app).delete('/folder/' + id);
+
+  const response2 = await request(app).get('/folder');
+  expect(response2.body.length).toEqual(1);
 });
 
-test('PUT_folder', (done) => {
+test('PUT_folder', async () => {
   const folder4579 = {
     name: 'Update Test1',
   };
 
-  request(app)
-    .get('/')
-    .end((err, res) => {
-      if (err) return done(err);
-      request(app)
-        .put('/' + res.body[0]._id)
-        .send(folder4579)
-        .end((err, res) => {
-          if (err) return done(err);
-          // console.log(res.body);
-          request(app)
-            .get('/')
-            .end((err, res) => {
-              if (err) return done(err);
-              expect(res.body[0].name).toEqual('Update Test1');
-              done();
-            });
-        });
-    });
+  const response = await request(app).get('/folder');
+
+  const id = response.body[0]._id;
+
+  await request(app)
+    .put('/folder/' + id)
+    .send(folder4579);
+  const response2 = await request(app).get('/folder');
+  expect(response2.body[0].name).toEqual('Update Test1');
 });

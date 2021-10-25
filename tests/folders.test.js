@@ -56,6 +56,20 @@ test('GET_folders', async () => {
   );
 });
 
+test('GET_folder', async () => {
+  const response = await request(app).get('/folder');
+
+  const id = response.body[0]._id;
+
+  const response2 = await request(app).get(`/folder/${id}`);
+
+  expect(response2.body.folder).toEqual(
+    expect.objectContaining({
+      name: 'Test1',
+    })
+  );
+});
+
 test('POST_folder', async () => {
   const folder567 = {
     name: 'folder567',

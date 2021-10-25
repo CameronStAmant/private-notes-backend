@@ -160,37 +160,34 @@ test('DELETE many notes', async () => {
     })
   );
 });
-/*
-test('UPDATE note', (done) => {
-  let id;
-  request(app)
-    .get('/')
-    .expect('Content-Type', /json/)
-    .expect((res) => {
-      id = res.body[0]._id;
+
+test('UPDATE note', async () => {
+  const res = await request(app)
+    .get('/folder')
+    .set('Accept', 'application/json');
+  const fol1 = res.body[0]._id;
+
+  const response = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+  const id = response.body[0]._id;
+
+  const updateNote = await request(app)
+    .put('/note/' + id)
+    .set('Content-Type', 'application/json')
+    .send({ title: 'title3', body: 'body3', folder: fol1 })
+    .set('Accept', 'application/json')
+    .expect('Content-Type', /json/);
+
+  expect(updateNote.body.note).toEqual(
+    expect.objectContaining({
+      title: 'title3',
+      body: 'body3',
     })
-    .end((err) => {
-      if (err) return done(err);
-      request(app)
-        .get('/' + id)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err);
-          request(app)
-            .put('/' + id)
-            .type('form')
-            .send({ title: 'title3', body: 'body3' })
-            .set('Accept', 'application/json')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .end((err, res) => {
-              if (err) return done(err);
-              return done();
-            });
-        });
-    });
+  );
 });
 
+/*
 test('UPDATE note fails on failed validation', (done) => {
   let id;
   request(app)

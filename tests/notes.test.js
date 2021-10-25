@@ -139,42 +139,34 @@ test('DELETE note', async () => {
     .delete('/note/' + id)
     .expect(200);
 });
-/*
-test('DELETE many notes', (done) => {
-  let idArr = [];
-  request(app)
-    .get('/')
-    .expect('Content-Type', /json/)
-    .expect((res) => {
-      idArr.push(res.body[0]._id);
-      idArr.push(res.body[1]._id);
-    })
-    .end((err, res) => {
-      if (err) return done(err);
-      request(app)
-        .delete('/delete-many-notes')
-        .set('Content-Type', 'application/json')
-        .send({ ids: idArr })
-        .expect(200)
-        .end((err, res) => {
-          if (err) return done(err);
-          request(app)
-            .get('/')
-            .expect('Content-Type', /json/)
-            .end((err, res) => {
-              if (err) return done(err);
-              expect(res.body[0]).toEqual(
-                expect.objectContaining({
-                  title: 'title245',
-                  body: 'body245',
-                })
-              );
-              done();
-            });
-        });
-    });
-});
 
+test('DELETE many notes', async () => {
+  let idArr = [];
+  const response = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+
+  idArr.push(response.body[0]._id);
+  idArr.push(response.body[1]._id);
+
+  await request(app)
+    .delete('/note/delete-many-notes')
+    .set('Content-Type', 'application/json')
+    .send({ ids: idArr })
+    .expect(200);
+
+  const response2 = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+
+  expect(response2.body[0]).toEqual(
+    expect.objectContaining({
+      title: 'title245',
+      body: 'body245',
+    })
+  );
+});
+/*
 test('UPDATE note', (done) => {
   let id;
   request(app)

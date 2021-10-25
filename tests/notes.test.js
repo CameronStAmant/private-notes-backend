@@ -187,33 +187,21 @@ test('UPDATE note', async () => {
   );
 });
 
-/*
-test('UPDATE note fails on failed validation', (done) => {
-  let id;
-  request(app)
-    .get('/')
-    .expect('Content-Type', /json/)
-    .expect((res) => {
-      id = res.body[0]._id;
-    })
-    .end((err) => {
-      if (err) return done(err);
-      request(app)
-        .get('/' + id)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err);
-          request(app)
-            .put('/' + id)
-            .type('form')
-            .send({ title: '', body: 'body3' })
-            .set('Accept', 'application/json')
-            .expect(400)
-            .end((err, res) => {
-              if (err) return done(err);
-              return done();
-            });
-        });
-    });
+test('UPDATE note fails on failed validation', async () => {
+  const response = await request(app)
+    .get('/folder')
+    .set('Accept', 'application/json');
+  const fol1 = response.body[0]._id;
+
+  const response2 = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+
+  const id = response2.body[0]._id;
+
+  await request(app)
+    .put('/note/' + id)
+    .send({ title: '', body: 'body3', folder: fol1 })
+    .set('Accept', 'application/json')
+    .expect(400);
 });
-*/

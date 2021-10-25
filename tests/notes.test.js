@@ -129,27 +129,20 @@ test('POST note', async () => {
 
   expect(response.body.url).toEqual(expect.any(String));
 });
-/*
-test('DELETE note', (done) => {
-  let id;
-  request(app)
-    .get('/')
-    .expect('Content-Type', /json/)
-    .expect((res) => {
-      id = res.body[0]._id;
-    })
-    .end((err) => {
-      if (err) return done(err);
-      request(app)
-        .delete('/' + id)
-        .expect(200)
-        .end((err, res) => {
-          if (err) return done(err);
-          return done();
-        });
-    });
-});
 
+test('DELETE note', async () => {
+  let id;
+  const response = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+
+  id = response.body[0]._id;
+
+  await request(app)
+    .delete('/note/' + id)
+    .expect(200);
+});
+/*
 test('DELETE many notes', (done) => {
   let idArr = [];
   request(app)

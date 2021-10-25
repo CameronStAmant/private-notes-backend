@@ -1,7 +1,7 @@
 const Note = require('../models/note');
 const { body, validationResult } = require('express-validator');
 
-exports.note_list = (req, res) => {
+exports.GET_notes = (req, res) => {
   Note.find().exec((err, list_notes) => {
     if (err) {
       return next(err);
@@ -10,7 +10,7 @@ exports.note_list = (req, res) => {
   });
 };
 
-exports.note_detail = (req, res, next) => {
+exports.GET_note = (req, res, next) => {
   Note.findById(req.params.id).exec((err, content) => {
     if (err) {
       return next(err);
@@ -21,7 +21,7 @@ exports.note_detail = (req, res, next) => {
   });
 };
 
-exports.note_create_post = [
+exports.POST_note = [
   body('title').trim().isLength({ min: 1 }).escape(),
   body('body').trim().isLength({ min: 1 }).escape(),
 
@@ -52,21 +52,21 @@ exports.note_create_post = [
   },
 ];
 
-exports.note_delete_post = (req, res) => {
+exports.DELETE_note = (req, res) => {
   Note.findByIdAndDelete(req.params.id).exec((err) => {
     if (err) return next(err);
     res.sendStatus(200);
   });
 };
 
-exports.note_delete_many_notes = (req, res, next) => {
+exports.DELETE_many_notes = (req, res, next) => {
   Note.deleteMany({ _id: { $in: req.body.ids } }).exec((err) => {
     if (err) return next(err);
   });
   res.sendStatus(200);
 };
 
-exports.note_update_post = [
+exports.PUT_note = [
   body('title').trim().isLength({ min: 1 }).escape(),
   body('body').trim().isLength({ min: 1 }).escape(),
 

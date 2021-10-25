@@ -10,7 +10,7 @@ exports.note_list = (req, res) => {
   });
 };
 
-exports.note_detail = (req, res) => {
+exports.note_detail = (req, res, next) => {
   Note.findById(req.params.id).exec((err, content) => {
     if (err) {
       return next(err);
@@ -31,11 +31,13 @@ exports.note_create_post = [
       return res.json({
         title: req.body.title,
         body: req.body.body,
+        folder: req.body.folder,
       });
     } else {
       const note = new Note({
         title: req.body.title,
         body: req.body.body,
+        folder: req.body.folder,
       });
 
       note.save((err) => {

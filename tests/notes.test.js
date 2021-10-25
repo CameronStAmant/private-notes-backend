@@ -109,20 +109,27 @@ test('GET note details', async () => {
   );
 });
 
-test('POST note', (done) => {
-  request(app)
-    .post('/create')
-    .type('form')
-    .send({ title: 'title3', body: 'body3' })
-    .set('Accept', 'application/json')
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .end((err, res) => {
-      if (err) return done(err);
-      return done();
-    });
-});
+test('POST note', async () => {
+  let fol1;
 
+  const res = await request(app)
+    .get('/folder')
+    .set('Accept', 'application/json');
+  fol1 = res.body[0]._id;
+
+  const note = { title: 'title3', body: 'body3', folder: fol1 };
+
+  const response = await request(app)
+    .post('/note/create')
+    .send(note)
+    .set('Accept', 'application/json')
+    .catch((err) => {
+      throw err;
+    });
+
+  expect(response.body.url).toEqual(expect.any(String));
+});
+/*
 test('DELETE note', (done) => {
   let id;
   request(app)
@@ -236,3 +243,4 @@ test('UPDATE note fails on failed validation', (done) => {
         });
     });
 });
+*/

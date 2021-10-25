@@ -23,7 +23,7 @@ exports.note_detail = (req, res, next) => {
 
 exports.note_create_post = [
   body('title').trim().isLength({ min: 1 }).escape(),
-  body('body').trim().isLength({ min: 1 }),
+  body('body').trim().isLength({ min: 1 }).escape(),
 
   (req, res, next) => {
     const errors = validationResult(req);

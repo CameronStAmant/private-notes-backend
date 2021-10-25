@@ -23,20 +23,44 @@ beforeAll(() => {
 });
 
 beforeEach(async () => {
+  const folder1 = {
+    name: 'folder1',
+  };
+
+  const folder2 = {
+    name: 'folder2',
+  };
+
+  let fol1;
+  let fol2;
+
   await request(app)
-    .post('/create')
+    .post('/folder')
+    .set('Content-Type', 'application/json')
+    .send(folder1);
+  await request(app)
+    .post('/folder')
+    .set('Content-Type', 'application/json')
+    .send(folder2);
+  const res = await request(app)
+    .get('/folder')
+    .set('Accept', 'application/json');
+  fol1 = res.body[0]._id;
+  fol2 = res.body[1]._id;
+  await request(app)
+    .post('/note/create')
     .type('form')
-    .send({ title: 'title1', body: 'body1' })
+    .send({ title: 'title1', body: 'body1', folder: fol1 })
     .set('Accept', 'application/json');
   await request(app)
-    .post('/create')
+    .post('/note/create')
     .type('form')
-    .send({ title: 'title2', body: 'body2' })
+    .send({ title: 'title2', body: 'body2', folder: fol2 })
     .set('Accept', 'application/json');
   await request(app)
-    .post('/create')
+    .post('/note/create')
     .type('form')
-    .send({ title: 'title245', body: 'body245' })
+    .send({ title: 'title245', body: 'body245', folder: fol1 })
     .set('Accept', 'application/json');
 });
 

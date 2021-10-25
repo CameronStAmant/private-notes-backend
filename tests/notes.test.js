@@ -31,9 +31,6 @@ beforeEach(async () => {
     name: 'folder2',
   };
 
-  let fol1;
-  let fol2;
-
   await request(app)
     .post('/folder')
     .set('Content-Type', 'application/json')
@@ -45,8 +42,10 @@ beforeEach(async () => {
   const res = await request(app)
     .get('/folder')
     .set('Accept', 'application/json');
-  fol1 = res.body[0]._id;
-  fol2 = res.body[1]._id;
+
+  const fol1 = res.body[0]._id;
+  const fol2 = res.body[1]._id;
+
   await request(app)
     .post('/note/create')
     .set('Content-Type', 'application/json')
@@ -83,21 +82,19 @@ test('GET note list', async () => {
 });
 
 test('GET note details', async () => {
-  let id;
-
-  await request(app)
-    .get('/note')
-    .expect('Content-Type', /json/)
-    .expect((res) => {
-      id = res.body[0]._id;
-    });
   const response = await request(app)
+    .get('/note')
+    .expect('Content-Type', /json/);
+
+  const id = response.body[0]._id;
+
+  const response2 = await request(app)
     .get('/note/' + id)
     .expect('Content-Type', /json/)
     .catch((err) => {
       throw err;
     });
-  expect(response.body.note).toEqual(
+  expect(response2.body.note).toEqual(
     expect.objectContaining({
       title: 'title1',
       body: 'body1',
@@ -107,16 +104,14 @@ test('GET note details', async () => {
 });
 
 test('POST note', async () => {
-  let fol1;
-
-  const res = await request(app)
+  const response = await request(app)
     .get('/folder')
     .set('Accept', 'application/json');
-  fol1 = res.body[0]._id;
 
+  const fol1 = response.body[0]._id;
   const note = { title: 'title3', body: 'body3', folder: fol1 };
 
-  const response = await request(app)
+  const response2 = await request(app)
     .post('/note/create')
     .send(note)
     .set('Accept', 'application/json')
@@ -124,16 +119,15 @@ test('POST note', async () => {
       throw err;
     });
 
-  expect(response.body.url).toEqual(expect.any(String));
+  expect(response2.body.url).toEqual(expect.any(String));
 });
 
 test('DELETE note', async () => {
-  let id;
   const response = await request(app)
     .get('/note')
     .expect('Content-Type', /json/);
 
-  id = response.body[0]._id;
+  const id = response.body[0]._id;
 
   await request(app)
     .delete('/note/' + id)

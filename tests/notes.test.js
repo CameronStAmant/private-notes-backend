@@ -1,5 +1,6 @@
 const initializeMongoServer = require('../mongoConfigTesting');
 const noteRouter = require('../routes/note');
+const folderRouter = require('../routes/folder');
 const request = require('supertest');
 const express = require('express');
 const app = express();
@@ -9,7 +10,8 @@ const Note = require('../models/note');
 const initializeDatabase = () => {
   initializeMongoServer();
   app.use(express.urlencoded({ extended: false }));
-  app.use('/', noteRouter);
+  app.use('/folder', folderRouter);
+  app.use('/note', noteRouter);
 };
 
 const clearDatabase = async () => {
@@ -44,7 +46,7 @@ afterEach(() => {
 
 test('GET note list', (done) => {
   request(app)
-    .get('/')
+    .get('/note')
     .expect('Content-Type', /json/)
     .end((err, res) => {
       if (err) return done(err);

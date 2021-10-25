@@ -78,36 +78,35 @@ test('GET note list', (done) => {
         expect.objectContaining({
           title: 'title1',
           body: 'body1',
+          folder: expect.any(String),
         })
       );
       done();
     });
 });
 
-test('GET note details', (done) => {
+test('GET note details', async () => {
   let id;
-  request(app)
-    .get('/')
+
+  await request(app)
+    .get('/note')
     .expect('Content-Type', /json/)
     .expect((res) => {
       id = res.body[0]._id;
-    })
-    .end((err) => {
-      if (err) return done(err);
-      request(app)
-        .get('/' + id)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err);
-          expect(res.body.note).toEqual(
-            expect.objectContaining({
-              title: 'title1',
-              body: 'body1',
-            })
-          );
-          done();
-        });
     });
+  const response = await request(app)
+    .get('/note/' + id)
+    .expect('Content-Type', /json/)
+    .catch((err) => {
+      throw err;
+    });
+  expect(response.body.note).toEqual(
+    expect.objectContaining({
+      title: 'title1',
+      body: 'body1',
+      folder: expect.any(String),
+    })
+  );
 });
 
 test('POST note', (done) => {

@@ -8,6 +8,13 @@ exports.GET_folders = (req, res, next) => {
   });
 };
 
+exports.GET_folder = (req, res, next) => {
+  Folder.findById(req.params.id).exec((err, folder) => {
+    if (err) return next(err);
+    res.json({ folder: folder });
+  });
+};
+
 exports.POST_folder = [
   body('name').trim().isLength({ min: 1 }).escape(),
 

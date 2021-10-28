@@ -1,4 +1,5 @@
 const Folder = require('../models/folder');
+const Note = require('../models/note');
 const { body, validationResult } = require('express-validator');
 
 exports.GET_folders = (req, res, next) => {
@@ -38,9 +39,17 @@ exports.POST_folder = [
   },
 ];
 
-exports.DELETE_folder = (req, res, next) => {
+exports.DELETE_folder = async (req, res, next) => {
+  const folder = await Folder.findById(req.params.id).exec();
+  for (let i = 0; i < folder.notes.length; i++) {
+    Note.findByIdAndDelete(folder.notes[i], (err) => {
+      if (err) return next(err);
+    });
+  }
+
   Folder.findByIdAndDelete(req.params.id).exec((err) => {
     if (err) return next(err);
+
     res.sendStatus(200);
   });
 };

@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 app.use(express.json());
 const Folder = require('../models/folder');
+const Note = require('../models/note');
 
 const initializeDatabase = () => {
   initializeMongoServer();

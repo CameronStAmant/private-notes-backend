@@ -1,4 +1,5 @@
 const Note = require('../models/note');
+const Folder = require('../models/folder');
 const { body, validationResult } = require('express-validator');
 
 exports.GET_notes = (req, res) => {
@@ -44,9 +45,15 @@ exports.POST_note = [
         if (err) {
           return next(err);
         }
-        return res.json({
-          url: note.url,
-        });
+        const updateFolder = async () => {
+          const folder = await Folder.findById(req.body.folder);
+          folder.notes.push(note._id);
+          await folder.save();
+          return res.json({
+            url: note.url,
+          });
+        };
+        updateFolder();
       });
     }
   },
@@ -66,6 +73,7 @@ exports.DELETE_many_notes = (req, res, next) => {
   res.sendStatus(200);
 };
 
+//update PUT_note to update the folder as well
 exports.PUT_note = [
   body('title').trim().isLength({ min: 1 }).escape(),
   body('body').trim().isLength({ min: 1 }).escape(),

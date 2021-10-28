@@ -9,10 +9,12 @@ exports.GET_folders = (req, res, next) => {
 };
 
 exports.GET_folder = (req, res, next) => {
-  Folder.findById(req.params.id).exec((err, folder) => {
-    if (err) return next(err);
-    res.json({ folder: folder });
-  });
+  Folder.findById(req.params.id)
+    .populate('notes')
+    .exec((err, folder) => {
+      if (err) return next(err);
+      res.json({ folder: folder });
+    });
 };
 
 exports.POST_folder = [
@@ -28,7 +30,6 @@ exports.POST_folder = [
       const folder = new Folder({
         name: req.body.name,
       });
-
       folder.save((err) => {
         if (err) return next(err);
         res.sendStatus(200);

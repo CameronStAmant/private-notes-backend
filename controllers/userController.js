@@ -25,7 +25,7 @@ exports.POST_signup = [
         });
         user.save((err) => {
           if (err) return next(err);
-          res.sendStatus(200);
+          res.sendStatus(201);
         });
       });
     }

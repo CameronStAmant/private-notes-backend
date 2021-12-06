@@ -61,7 +61,7 @@ test('POST_signup', async () => {
     .post('/signup')
     .set('Content-Type', 'application/json')
     .send(user2)
-    .expect(200);
+    .expect(201);
 });
 
 test('POST_login', async () => {

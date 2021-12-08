@@ -19,13 +19,20 @@ exports.POST_signup = [
         if (err != null) {
           return next(err);
         }
-        const user = new User({
-          username: req.body.username,
-          password: hashedPassword,
-        });
-        user.save((err) => {
+        User.find({ username: req.body.username }).exec((err, userFound) => {
           if (err) return next(err);
-          res.sendStatus(201);
+          if (userFound.length === 0) {
+            const user = new User({
+              username: req.body.username,
+              password: hashedPassword,
+            });
+            user.save((err) => {
+              if (err) return next(err);
+              return res.sendStatus(201);
+            });
+          } else {
+            return res.sendStatus(409);
+          }
         });
       });
     }

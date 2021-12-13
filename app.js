@@ -1,12 +1,9 @@
 var express = require('express');
-const session = require('express-session');
 const authenticateToken = require('./authenticateToken');
 
 const cors = require('cors');
 var path = require('path');
-// var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-require('dotenv').config();
 require('./mongoConfig');
 const noteRouter = require('./routes/note');
 const folderRouter = require('./routes/folder');
@@ -17,15 +14,6 @@ require('dotenv').config();
 var app = express();
 
 app.use(cors({ origin: 'http://localhost:3001' }));
-// app.use(cookieParser());
-app.use(
-  session({
-    secret: 'cats',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {},
-  })
-);
 
 app.use(logger('dev'));
 app.use(express.json());

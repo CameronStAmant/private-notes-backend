@@ -89,7 +89,7 @@ test('GET note details', async () => {
   const id = response.body[0]._id;
 
   const response2 = await request(app)
-    .get('/note/' + id)
+    .get(`/note/${id}`)
     .expect('Content-Type', /json/)
     .catch((err) => {
       throw err;
@@ -129,9 +129,7 @@ test('DELETE note', async () => {
 
   const id = response.body[0]._id;
 
-  await request(app)
-    .delete('/note/' + id)
-    .expect(200);
+  await request(app).delete(`/note/${id}`).expect(200);
 });
 
 test('DELETE many notes', async () => {
@@ -173,7 +171,7 @@ test('UPDATE note', async () => {
   const id = response.body[0]._id;
 
   const updateNote = await request(app)
-    .put('/note/' + id)
+    .put(`/note/${id}`)
     .set('Content-Type', 'application/json')
     .send({ title: 'title3', body: 'body3', folder: fol1 })
     .set('Accept', 'application/json')
@@ -200,7 +198,7 @@ test('UPDATE note fails on failed validation', async () => {
   const id = response2.body[0]._id;
 
   await request(app)
-    .put('/note/' + id)
+    .put(`/note/${id}`)
     .send({ title: '', body: 'body3', folder: fol1 })
     .set('Accept', 'application/json')
     .expect(400);

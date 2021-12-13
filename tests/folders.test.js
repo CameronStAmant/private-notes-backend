@@ -91,7 +91,7 @@ test('DELETE_folder', async () => {
 
   const id = response.body[0]._id;
 
-  await request(app).delete('/folder/' + id);
+  await request(app).delete(`/folder/${id}`);
 
   const response2 = await request(app).get('/folder');
   expect(response2.body.length).toEqual(1);
@@ -106,9 +106,7 @@ test('PUT_folder', async () => {
 
   const id = response.body[0]._id;
 
-  await request(app)
-    .put('/folder/' + id)
-    .send(folder4579);
+  await request(app).put(`/folder/${id}`).send(folder4579);
   const response2 = await request(app).get('/folder');
   expect(response2.body[0].name).toEqual('Update Test1');
 });

@@ -1,7 +1,6 @@
 var express = require('express');
 const session = require('express-session');
-const passport = require('passport');
-require('./passport');
+const authenticateToken = require('./authenticateToken');
 
 const cors = require('cors');
 var path = require('path');
@@ -13,10 +12,11 @@ const noteRouter = require('./routes/note');
 const folderRouter = require('./routes/folder');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+require('dotenv').config();
 
 var app = express();
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
+app.use(cors({ origin: 'http://localhost:3001' }));
 // app.use(cookieParser());
 app.use(
   session({
@@ -33,22 +33,11 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  // res.redirect('/login');
-  console.log('not authorized');
-}
-
 app.all('*', function (req, res, next) {
   if (req.path === '/login' || req.path === '/signup') {
     return next();
   }
-  ensureAuthenticated(req, res, next);
+  authenticateToken(req, res, next);
 });
 
 app.use('/', indexRouter);

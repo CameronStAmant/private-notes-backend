@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-const passport = require('passport');
 const user_controller = require('../controllers/userController');
 
 /* GET home page. */
@@ -10,10 +9,6 @@ router.get('/', function (req, res, next) {
 
 router.post('/signup', user_controller.POST_signup);
 
-router.post(
-  '/login',
-  passport.authenticate('local'),
-  user_controller.POST_login
-);
+router.post('/login', user_controller.POST_login);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const { body, validationResult } = require('express-validator');
 
@@ -40,5 +41,22 @@ exports.POST_signup = [
 ];
 
 exports.POST_login = (req, res, next) => {
-  res.sendStatus(201);
+  User.findOne({ username: req.body.username }, (err, user) => {
+    if (err) {
+      return done(err);
+    }
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username' });
+    }
+    bcrypt.compare(req.body.password, user.password, (err, result) => {
+      if (result) {
+        const accessToken = jwt.sign(
+          req.body.username,
+          process.env.ACCESS_TOKEN_SECRET
+        );
+        return res.status(201).json({ accessToken });
+      }
+      return done(null, false, { message: 'Incorrect password' });
+    });
+  });
 };

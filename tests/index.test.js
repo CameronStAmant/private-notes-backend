@@ -2,23 +2,10 @@ const initializeMongoServer = require('../mongoConfigTesting');
 const indexRouter = require('../routes/index');
 const request = require('supertest');
 const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-require('../passport');
+require('dotenv').config();
 
 const app = express();
 app.use(express.json());
-app.use(
-  session({
-    secret: 'cats',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {},
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 const User = require('../models/user');
 
